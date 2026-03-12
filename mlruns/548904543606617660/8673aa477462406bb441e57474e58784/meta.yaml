@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/548904543606617660/8673aa477462406bb441e57474e58784/artifacts
+end_time: 1773325194101
+entry_point_name: ''
+experiment_id: '548904543606617660'
+lifecycle_stage: active
+run_id: 8673aa477462406bb441e57474e58784
+run_name: luminous-fowl-13
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773325190726
+status: 3
+tags: []
+user_id: nikolas

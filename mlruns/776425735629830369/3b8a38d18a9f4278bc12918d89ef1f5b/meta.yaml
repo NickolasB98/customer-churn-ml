@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/776425735629830369/3b8a38d18a9f4278bc12918d89ef1f5b/artifacts
+end_time: 1773316102556
+entry_point_name: ''
+experiment_id: '776425735629830369'
+lifecycle_stage: active
+run_id: 3b8a38d18a9f4278bc12918d89ef1f5b
+run_name: wise-hare-846
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773316102525
+status: 4
+tags: []
+user_id: nikolas

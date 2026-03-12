@@ -2,7 +2,7 @@
 INFERENCE PIPELINE - Production ML Model Serving with Feature Consistency
 =========================================================================
 
-This module provides the core inference functionality for the Telco Churn prediction model.
+This module provides the core inference functionality for the E-Commerce Churn prediction model.
 It ensures that serving-time feature transformations exactly match training-time transformations,
 which is CRITICAL for model accuracy in production.
 
@@ -43,14 +43,16 @@ except Exception as e:
     print(f"❌ Failed to load model from {MODEL_DIR}: {e}")
     # Fallback for local development (OPTIONAL)
     try:
-        # Try loading from local MLflow tracking
+        # Try loading the LATEST model from local MLflow tracking
         import glob
-        local_model_paths = glob.glob("./mlruns/*/*/artifacts/model")
+        # MLflow stores models in: ./mlruns/<experiment_id>/models/<model_id>/artifacts
+        local_model_paths = glob.glob("./mlruns/*/models/*/artifacts")
         if local_model_paths:
-            latest_model = max(local_model_paths, key=os.path.getmtime)
+            # Sort by modification time to get the LATEST model
+            latest_model = sorted(local_model_paths, key=os.path.getmtime)[-1]
             model = mlflow.pyfunc.load_model(latest_model)
             MODEL_DIR = latest_model
-            print(f"✅ Fallback: Loaded model from {latest_model}")
+            print(f"✅ Fallback: Loaded LATEST model from {latest_model}")
         else:
             raise Exception("No model found in local mlruns")
     except Exception as fallback_error:
@@ -59,11 +61,36 @@ except Exception as e:
 # === FEATURE SCHEMA LOADING ===
 # CRITICAL: Load the exact feature column order used during training
 # This ensures the model receives features in the expected order
+FEATURE_COLS = None
 try:
-    feature_file = os.path.join(MODEL_DIR, "feature_columns.txt")
-    with open(feature_file) as f:
-        FEATURE_COLS = [ln.strip() for ln in f if ln.strip()]
-    print(f"✅ Loaded {len(FEATURE_COLS)} feature columns from training")
+    # Try multiple locations for feature_columns.txt, prioritizing LATEST
+    import glob
+
+    # Search in all mlruns directories and get the LATEST one
+    all_feature_files = glob.glob("./mlruns/*/*/artifacts/feature_columns.txt")
+
+    if all_feature_files:
+        # Sort by modification time and get the LATEST
+        latest_feature_file = sorted(all_feature_files, key=os.path.getmtime)[-1]
+        with open(latest_feature_file) as f:
+            FEATURE_COLS = [ln.strip() for ln in f if ln.strip()]
+        print(f"✅ Loaded {len(FEATURE_COLS)} feature columns from LATEST training run")
+    else:
+        # Fallback to other locations
+        feature_locations = [
+            os.path.join(MODEL_DIR, "feature_columns.txt"),
+            "./artifacts/feature_columns.txt",
+        ]
+
+        for feature_file in feature_locations:
+            if os.path.exists(feature_file):
+                with open(feature_file) as f:
+                    FEATURE_COLS = [ln.strip() for ln in f if ln.strip()]
+                print(f"✅ Loaded {len(FEATURE_COLS)} feature columns from {feature_file}")
+                break
+
+    if FEATURE_COLS is None:
+        raise Exception(f"Could not find feature_columns.txt in any location")
 except Exception as e:
     raise Exception(f"Failed to load feature columns: {e}")
 
@@ -72,16 +99,15 @@ except Exception as e:
 # Any changes here will cause train/serve skew and degrade model performance
 
 # Deterministic binary feature mappings (consistent with training)
+# E-Commerce has Complain (0/1) and Gender (Male/Female) as binary features
 BINARY_MAP = {
-    "gender": {"Female": 0, "Male": 1},           # Demographics
-    "Partner": {"No": 0, "Yes": 1},               # Has partner
-    "Dependents": {"No": 0, "Yes": 1},            # Has dependents  
-    "PhoneService": {"No": 0, "Yes": 1},          # Phone service
-    "PaperlessBilling": {"No": 0, "Yes": 1},      # Billing preference
+    "Gender": {"Female": 0, "Male": 1},           # Demographics
+    "Complain": {0: 0, 1: 1, "0": 0, "1": 1},     # Customer complained
 }
 
 # Numeric columns that need type coercion
-NUMERIC_COLS = ["tenure", "MonthlyCharges", "TotalCharges"]
+NUMERIC_COLS = ["Tenure", "HourSpendOnApp", "WarehouseToHome", "OrderCount",
+                 "OrderAmountHikeFromlastYear", "CouponUsed", "DaySinceLastOrder", "CashbackAmount"]
 
 def _serve_transform(df: pd.DataFrame) -> pd.DataFrame:
     """

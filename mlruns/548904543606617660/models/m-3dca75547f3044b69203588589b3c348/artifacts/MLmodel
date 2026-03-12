@@ -1,0 +1,23 @@
+artifact_path: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/548904543606617660/models/m-3dca75547f3044b69203588589b3c348/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.7
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.1
+model_id: m-3dca75547f3044b69203588589b3c348
+model_size_bytes: 1380499
+model_uuid: m-3dca75547f3044b69203588589b3c348
+prompts: null
+run_id: c1c9c1991271428596386d35a13f1c44
+utc_time_created: '2026-03-12 14:15:41.667460'

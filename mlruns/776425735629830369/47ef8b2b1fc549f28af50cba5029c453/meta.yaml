@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/776425735629830369/47ef8b2b1fc549f28af50cba5029c453/artifacts
+end_time: 1773316132834
+entry_point_name: ''
+experiment_id: '776425735629830369'
+lifecycle_stage: active
+run_id: 47ef8b2b1fc549f28af50cba5029c453
+run_name: languid-shrimp-855
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773316132796
+status: 4
+tags: []
+user_id: nikolas

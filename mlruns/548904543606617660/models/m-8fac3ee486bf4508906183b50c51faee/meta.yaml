@@ -1,0 +1,10 @@
+artifact_location: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/548904543606617660/models/m-8fac3ee486bf4508906183b50c51faee/artifacts
+creation_timestamp: 1773325243500
+experiment_id: '548904543606617660'
+last_updated_timestamp: 1773325246458
+model_id: m-8fac3ee486bf4508906183b50c51faee
+model_type: null
+name: model
+source_run_id: c95cf71b89e24409a543678c34d52355
+status: 2
+status_message: null

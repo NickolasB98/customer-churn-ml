@@ -1,22 +1,41 @@
-# venvs
+# Virtual Environments
 .venv/
 venv/
 env/
 
-# OS cruft
+# Operating System
 .DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
 
-# Python cache
+# Python Cache & Compiled Files
 __pycache__/
 *.py[cod]
 *.pyo
+*.egg-info/
+.pytest_cache/
 
-# Big artifacts we don't want in git
-mlruns/
-artifacts/
-data/raw/
-data/processed/
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# BUT keep our bundled serving model in the repo
-!src/serving/model/
-!src/serving/model/**
+# Project-Specific (Large Artifacts & Data)
+mlruns/                    # MLflow experiment tracking (regenerated per run)
+artifacts/                 # Large model artifacts (excluded, keep in gitignore)
+data/raw/                  # Raw dataset files (not tracked)
+data/processed/            # Processed datasets (regenerated)
+
+# Claude Code & Tools
+.claude/                   # Claude memory/context (local only)
+
+# Gradio & Web UI Cache
+.gradio/                   # Gradio cache files
+flagged/                   # Gradio flagged outputs
+*.db                       # Temporary databases
+
+# System Files
+*.log                      # Log files
+.env                       # Environment variables (DO NOT COMMIT)

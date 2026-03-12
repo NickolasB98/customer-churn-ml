@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/776425735629830369/ed27a8c073bc40dc9e0df8a6b8013a9f/artifacts
+end_time: 1773315995671
+entry_point_name: ''
+experiment_id: '776425735629830369'
+lifecycle_stage: active
+run_id: ed27a8c073bc40dc9e0df8a6b8013a9f
+run_name: puzzled-yak-294
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773315995645
+status: 4
+tags: []
+user_id: nikolas

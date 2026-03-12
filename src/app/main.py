@@ -2,7 +2,7 @@
 FASTAPI + GRADIO SERVING APPLICATION - Production-Ready ML Model Serving
 ========================================================================
 
-This application provides a complete serving solution for the Telco Customer Churn model
+This application provides a complete serving solution for the E-Commerce Customer Churn model
 with both programmatic API access and a user-friendly web interface.
 
 Architecture:
@@ -18,8 +18,8 @@ from src.serving.inference import predict  # Core ML inference logic
 
 # Initialize FastAPI application
 app = FastAPI(
-    title="Telco Customer Churn Prediction API",
-    description="ML API for predicting customer churn in telecom industry",
+    title="E-Commerce Customer Churn Prediction API",
+    description="ML API for predicting customer churn in e-commerce",
     version="1.0.0"
 )
 
@@ -36,50 +36,53 @@ def root():
 # Pydantic model for automatic validation and API documentation
 class CustomerData(BaseModel):
     """
-    Customer data schema for churn prediction.
-    
-    This schema defines the exact 18 features required for churn prediction.
+    Customer data schema for e-commerce churn prediction.
+
+    This schema defines the exact 19 features required for churn prediction.
     All features match the original dataset structure for consistency.
     """
     # Demographics
-    gender: str                # "Male" or "Female"
-    Partner: str               # "Yes" or "No" - has partner
-    Dependents: str            # "Yes" or "No" - has dependents
-    
-    # Phone services
-    PhoneService: str          # "Yes" or "No"
-    MultipleLines: str         # "Yes", "No", or "No phone service"
-    
-    # Internet services  
-    InternetService: str       # "DSL", "Fiber optic", or "No"
-    OnlineSecurity: str        # "Yes", "No", or "No internet service"
-    OnlineBackup: str          # "Yes", "No", or "No internet service"
-    DeviceProtection: str      # "Yes", "No", or "No internet service"
-    TechSupport: str           # "Yes", "No", or "No internet service"
-    StreamingTV: str           # "Yes", "No", or "No internet service"
-    StreamingMovies: str       # "Yes", "No", or "No internet service"
-    
-    # Account information
-    Contract: str              # "Month-to-month", "One year", "Two year"
-    PaperlessBilling: str      # "Yes" or "No"
-    PaymentMethod: str         # "Electronic check", "Mailed check", etc.
-    
-    # Numeric features
-    tenure: int                # Number of months with company
-    MonthlyCharges: float      # Monthly charges in dollars
-    TotalCharges: float        # Total charges to date
+    Gender: str                          # "Male" or "Female"
+    MaritalStatus: str                   # "Single", "Married", or "Divorced"
+
+    # Engagement & Activity
+    Tenure: float                        # Months as customer
+    HourSpendOnApp: float                # Hours spent on app (0-5)
+    NumberOfDeviceRegistered: int        # Number of devices registered
+    NumberOfAddress: int                 # Number of addresses on file
+
+    # Location & Logistics
+    CityTier: int                        # City tier (1, 2, or 3)
+    WarehouseToHome: float               # Distance from warehouse (km)
+
+    # Purchase Behavior
+    PreferedOrderCat: str                # Preferred product category
+    OrderCount: float                    # Total number of orders
+    OrderAmountHikeFromlastYear: float   # % increase in order amount
+    CouponUsed: float                    # Number of coupons used
+    DaySinceLastOrder: float             # Days since last order
+    CashbackAmount: float                # Total cashback received
+
+    # Service Preferences
+    PreferredLoginDevice: str            # "Mobile Phone", "Phone", or "Computer"
+    PreferredPaymentMode: str            # "Debit Card", "UPI", "CC", "Cash on Delivery", "E wallet"
+
+    # Satisfaction & Feedback
+    SatisfactionScore: int               # Satisfaction score (1-5)
+    Complain: int                        # Whether customer complained (0 or 1)
+
 
 # === MAIN PREDICTION API ENDPOINT ===
 @app.post("/predict")
 def get_prediction(data: CustomerData):
     """
     Main prediction endpoint for customer churn prediction.
-    
+
     This endpoint:
     1. Receives validated customer data via Pydantic model
     2. Calls the inference pipeline to transform features and predict
     3. Returns churn prediction in JSON format
-    
+
     Expected Response:
     - {"prediction": "Likely to churn"} or {"prediction": "Not likely to churn"}
     - {"error": "error_message"} if prediction fails
@@ -93,48 +96,48 @@ def get_prediction(data: CustomerData):
         return {"error": str(e)}
 
 
-# =================================================== # 
+# =================================================== #
 
 
 # === GRADIO WEB INTERFACE ===
 def gradio_interface(
-    gender, Partner, Dependents, PhoneService, MultipleLines,
-    InternetService, OnlineSecurity, OnlineBackup, DeviceProtection,
-    TechSupport, StreamingTV, StreamingMovies, Contract,
-    PaperlessBilling, PaymentMethod, tenure, MonthlyCharges, TotalCharges
+    Gender, MaritalStatus, Tenure, HourSpendOnApp, NumberOfDeviceRegistered,
+    NumberOfAddress, CityTier, WarehouseToHome, PreferedOrderCat, OrderCount,
+    OrderAmountHikeFromlastYear, CouponUsed, DaySinceLastOrder, CashbackAmount,
+    PreferredLoginDevice, PreferredPaymentMode, SatisfactionScore, Complain
 ):
     """
     Gradio interface function that processes form inputs and returns prediction.
-    
+
     This function:
     1. Takes individual form inputs from Gradio UI
     2. Constructs the data dictionary matching the API schema
     3. Calls the same inference pipeline used by the API
     4. Returns user-friendly prediction string
-    
+
     """
     # Construct data dictionary matching CustomerData schema
     data = {
-        "gender": gender,
-        "Partner": Partner,
-        "Dependents": Dependents,
-        "PhoneService": PhoneService,
-        "MultipleLines": MultipleLines,
-        "InternetService": InternetService,
-        "OnlineSecurity": OnlineSecurity,
-        "OnlineBackup": OnlineBackup,
-        "DeviceProtection": DeviceProtection,
-        "TechSupport": TechSupport,
-        "StreamingTV": StreamingTV,
-        "StreamingMovies": StreamingMovies,
-        "Contract": Contract,
-        "PaperlessBilling": PaperlessBilling,
-        "PaymentMethod": PaymentMethod,
-        "tenure": int(tenure),              # Ensure integer type
-        "MonthlyCharges": float(MonthlyCharges),  # Ensure float type
-        "TotalCharges": float(TotalCharges),      # Ensure float type
+        "Gender": Gender,
+        "MaritalStatus": MaritalStatus,
+        "Tenure": float(Tenure),
+        "HourSpendOnApp": float(HourSpendOnApp),
+        "NumberOfDeviceRegistered": int(NumberOfDeviceRegistered),
+        "NumberOfAddress": int(NumberOfAddress),
+        "CityTier": int(CityTier),
+        "WarehouseToHome": float(WarehouseToHome),
+        "PreferedOrderCat": PreferedOrderCat,
+        "OrderCount": float(OrderCount),
+        "OrderAmountHikeFromlastYear": float(OrderAmountHikeFromlastYear),
+        "CouponUsed": float(CouponUsed),
+        "DaySinceLastOrder": float(DaySinceLastOrder),
+        "CashbackAmount": float(CashbackAmount),
+        "PreferredLoginDevice": PreferredLoginDevice,
+        "PreferredPaymentMode": PreferredPaymentMode,
+        "SatisfactionScore": int(SatisfactionScore),
+        "Complain": int(Complain),
     }
-    
+
     # Call same inference pipeline as API endpoint
     result = predict(data)
     return str(result)  # Return as string for Gradio display
@@ -146,55 +149,57 @@ demo = gr.Interface(
     inputs=[
         # Demographics section
         gr.Dropdown(["Male", "Female"], label="Gender", value="Male"),
-        gr.Dropdown(["Yes", "No"], label="Partner", value="No"),
-        gr.Dropdown(["Yes", "No"], label="Dependents", value="No"),
-        
-        # Phone services section
-        gr.Dropdown(["Yes", "No"], label="Phone Service", value="Yes"),
-        gr.Dropdown(["Yes", "No", "No phone service"], label="Multiple Lines", value="No"),
-        
-        # Internet services section (key churn predictors)
-        gr.Dropdown(["DSL", "Fiber optic", "No"], label="Internet Service", value="Fiber optic"),
-        gr.Dropdown(["Yes", "No", "No internet service"], label="Online Security", value="No"),
-        gr.Dropdown(["Yes", "No", "No internet service"], label="Online Backup", value="No"),
-        gr.Dropdown(["Yes", "No", "No internet service"], label="Device Protection", value="No"),
-        gr.Dropdown(["Yes", "No", "No internet service"], label="Tech Support", value="No"),
-        gr.Dropdown(["Yes", "No", "No internet service"], label="Streaming TV", value="Yes"),
-        gr.Dropdown(["Yes", "No", "No internet service"], label="Streaming Movies", value="Yes"),
-        
-        # Contract and billing section (major churn factors)
-        gr.Dropdown(["Month-to-month", "One year", "Two year"], label="Contract", value="Month-to-month"),
-        gr.Dropdown(["Yes", "No"], label="Paperless Billing", value="Yes"),
+        gr.Dropdown(["Single", "Married", "Divorced"], label="Marital Status", value="Single"),
+
+        # Engagement & Activity section
+        gr.Number(label="Tenure (months)", value=10, minimum=0, maximum=61),
+        gr.Number(label="Hour Spend On App", value=2.5, minimum=0, maximum=5),
+        gr.Number(label="Number of Device Registered", value=2, minimum=1, maximum=6),
+        gr.Number(label="Number of Address", value=3, minimum=1, maximum=22),
+
+        # Location & Logistics section
+        gr.Dropdown(["1", "2", "3"], label="City Tier", value="2"),
+        gr.Number(label="Warehouse to Home (km)", value=30, minimum=5, maximum=127),
+
+        # Purchase Behavior section
         gr.Dropdown([
-            "Electronic check", "Mailed check",
-            "Bank transfer (automatic)", "Credit card (automatic)"
-        ], label="Payment Method", value="Electronic check"),
-        
-        # Numeric features (important for churn prediction)
-        gr.Number(label="Tenure (months)", value=1, minimum=0, maximum=100),
-        gr.Number(label="Monthly Charges ($)", value=85.0, minimum=0, maximum=200),
-        gr.Number(label="Total Charges ($)", value=85.0, minimum=0, maximum=10000),
+            "Laptop & Accessory", "Mobile", "Mobile Phone",
+            "Others", "Fashion", "Grocery"
+        ], label="Preferred Order Category", value="Laptop & Accessory"),
+        gr.Number(label="Order Count", value=5, minimum=1, maximum=16),
+        gr.Number(label="Order Amount Hike From Last Year (%)", value=15, minimum=11, maximum=26),
+        gr.Number(label="Coupon Used", value=2, minimum=0, maximum=16),
+        gr.Number(label="Days Since Last Order", value=10, minimum=0, maximum=46),
+        gr.Number(label="Cashback Amount ($)", value=100, minimum=0, maximum=324.99),
+
+        # Service Preferences section
+        gr.Dropdown(["Mobile Phone", "Phone", "Computer"], label="Preferred Login Device", value="Mobile Phone"),
+        gr.Dropdown([
+            "Debit Card", "UPI", "CC", "Cash on Delivery", "E wallet"
+        ], label="Preferred Payment Mode", value="Debit Card"),
+
+        # Satisfaction & Feedback section
+        gr.Dropdown(["1", "2", "3", "4", "5"], label="Satisfaction Score (1-5)", value="4"),
+        gr.Dropdown(["0", "1"], label="Customer Complained (0=No, 1=Yes)", value="0"),
     ],
     outputs=gr.Textbox(label="Churn Prediction", lines=2),
-    title="🔮 Telco Customer Churn Predictor",
+    title="🛒 E-Commerce Customer Churn Predictor",
     description="""
     **Predict customer churn probability using machine learning**
-    
-    Fill in the customer details below to get a churn prediction. The model uses XGBoost trained on 
-    historical telecom customer data to identify customers at risk of churning.
-    
-    💡 **Tip**: Month-to-month contracts with fiber optic internet and electronic check payments 
-    tend to have higher churn rates.
+
+    Fill in the customer details below to get a churn prediction. The model uses XGBoost trained on
+    historical e-commerce customer data to identify customers at risk of churning.
+
+    💡 **Tip**: Customers with low satisfaction scores, long gaps since last order, and few devices
+    registered tend to have higher churn rates.
     """,
     examples=[
         # High churn risk example
-        ["Female", "No", "No", "Yes", "No", "Fiber optic", "No", "No", "No", 
-         "No", "Yes", "Yes", "Month-to-month", "Yes", "Electronic check", 
-         1, 85.0, 85.0],
-        # Low churn risk example  
-        ["Male", "Yes", "Yes", "Yes", "Yes", "DSL", "Yes", "Yes", "Yes",
-         "Yes", "No", "No", "Two year", "No", "Credit card (automatic)",
-         60, 45.0, 2700.0]
+        ["Female", "Single", 5, 1.0, 1, 3, 3, 50, "Mobile", 2, 12, 0, 30, 50,
+         "Mobile Phone", "Debit Card", 2, 1],
+        # Low churn risk example
+        ["Male", "Married", 40, 4.0, 4, 8, 1, 20, "Laptop & Accessory", 12, 20, 5, 5, 200,
+         "Computer", "CC", 5, 0]
     ],
     theme=gr.themes.Soft()  # Professional appearance
 )

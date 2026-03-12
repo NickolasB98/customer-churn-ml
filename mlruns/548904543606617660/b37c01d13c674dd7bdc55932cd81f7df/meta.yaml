@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/548904543606617660/b37c01d13c674dd7bdc55932cd81f7df/artifacts
+end_time: 1773325252746
+entry_point_name: ''
+experiment_id: '548904543606617660'
+lifecycle_stage: active
+run_id: b37c01d13c674dd7bdc55932cd81f7df
+run_name: monumental-roo-938
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773325249138
+status: 3
+tags: []
+user_id: nikolas

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/548904543606617660/c1c9c1991271428596386d35a13f1c44/artifacts
+end_time: 1773324952858
+entry_point_name: ''
+experiment_id: '548904543606617660'
+lifecycle_stage: active
+run_id: c1c9c1991271428596386d35a13f1c44
+run_name: treasured-koi-292
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773324937875
+status: 3
+tags: []
+user_id: nikolas

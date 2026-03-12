@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/776425735629830369/5eaa5a6e3017498ab73ad198fd041b6e/artifacts
+end_time: 1773316185809
+entry_point_name: ''
+experiment_id: '776425735629830369'
+lifecycle_stage: active
+run_id: 5eaa5a6e3017498ab73ad198fd041b6e
+run_name: rumbling-asp-979
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773316182090
+status: 3
+tags: []
+user_id: nikolas

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/776425735629830369/e68aca15f9384988abade26740229e40/artifacts
+end_time: 1773321648656
+entry_point_name: ''
+experiment_id: '776425735629830369'
+lifecycle_stage: active
+run_id: e68aca15f9384988abade26740229e40
+run_name: invincible-hound-148
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773321644681
+status: 3
+tags: []
+user_id: nikolas

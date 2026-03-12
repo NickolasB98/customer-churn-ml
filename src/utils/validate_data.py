@@ -4,16 +4,12 @@ import pandas as pd
 
 def validate_telco_data(df) -> Tuple[bool, List[str]]:
     """
-    Data validation for Telco Customer Churn dataset using pandas.
+    Data validation for E-Commerce Customer Churn dataset using pandas.
 
     Validates data integrity, business logic constraints, and statistical properties
     that the ML model expects.
     """
     print("🔍 Starting data validation...")
-
-    # Convert TotalCharges to numeric (may have empty strings)
-    if "TotalCharges" in df.columns:
-        df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
 
     failed_checks = []
     passed_checks = 0
@@ -22,8 +18,8 @@ def validate_telco_data(df) -> Tuple[bool, List[str]]:
     # === SCHEMA VALIDATION ===
     print("   📋 Validating schema and required columns...")
 
-    required_cols = ["customerID", "gender", "Partner", "Dependents", "PhoneService",
-                     "InternetService", "Contract", "tenure", "MonthlyCharges", "TotalCharges"]
+    required_cols = ["CustomerID", "Churn", "Tenure", "PreferredLoginDevice",
+                     "CityTier", "Gender", "PreferredPaymentMode", "PreferedOrderCat"]
 
     for col in required_cols:
         total_checks += 1
@@ -33,11 +29,11 @@ def validate_telco_data(df) -> Tuple[bool, List[str]]:
             passed_checks += 1
 
     # === NULL VALUES CHECK ===
-    critical_cols = ["customerID", "tenure", "MonthlyCharges"]
+    critical_cols = ["CustomerID", "Churn", "Gender"]
     for col in critical_cols:
         total_checks += 1
         if col in df.columns and df[col].isnull().any():
-            failed_checks.append(f"Null values in {col}")
+            failed_checks.append(f"Null values in critical column: {col}")
         else:
             passed_checks += 1
 
@@ -46,86 +42,95 @@ def validate_telco_data(df) -> Tuple[bool, List[str]]:
 
     # Gender values
     total_checks += 1
-    if "gender" in df.columns:
-        valid_genders = set(df["gender"].unique()) <= {"Male", "Female"}
+    if "Gender" in df.columns:
+        valid_genders = set(df["Gender"].unique()) <= {"Male", "Female"}
         if valid_genders:
             passed_checks += 1
         else:
             failed_checks.append("Invalid gender values")
 
-    # Yes/No fields
-    for col in ["Partner", "Dependents", "PhoneService"]:
-        total_checks += 1
-        if col in df.columns:
-            valid_vals = set(df[col].unique()) <= {"Yes", "No"}
-            if valid_vals:
-                passed_checks += 1
-            else:
-                failed_checks.append(f"Invalid values in {col}")
-
-    # Contract types
+    # Marital Status
     total_checks += 1
-    if "Contract" in df.columns:
-        valid_contracts = set(df["Contract"].unique()) <= {"Month-to-month", "One year", "Two year"}
-        if valid_contracts:
+    if "MaritalStatus" in df.columns:
+        valid_status = set(df["MaritalStatus"].dropna().unique()) <= {"Single", "Married", "Divorced"}
+        if valid_status:
             passed_checks += 1
         else:
-            failed_checks.append("Invalid contract types")
+            failed_checks.append("Invalid marital status values")
 
-    # Internet service
+    # City Tier (1-3)
     total_checks += 1
-    if "InternetService" in df.columns:
-        valid_internet = set(df["InternetService"].unique()) <= {"DSL", "Fiber optic", "No"}
-        if valid_internet:
+    if "CityTier" in df.columns:
+        if set(df["CityTier"].unique()) <= {1, 2, 3}:
             passed_checks += 1
         else:
-            failed_checks.append("Invalid internet service types")
+            failed_checks.append("Invalid CityTier values (should be 1-3)")
+
+    # Satisfaction Score (1-5)
+    total_checks += 1
+    if "SatisfactionScore" in df.columns:
+        if set(df["SatisfactionScore"].unique()) <= {1, 2, 3, 4, 5}:
+            passed_checks += 1
+        else:
+            failed_checks.append("Invalid SatisfactionScore values (should be 1-5)")
+
+    # Churn values (0 or 1)
+    total_checks += 1
+    if "Churn" in df.columns:
+        if set(df["Churn"].dropna().unique()) <= {0, 1}:
+            passed_checks += 1
+        else:
+            failed_checks.append("Invalid Churn values (should be 0 or 1)")
 
     # === NUMERIC RANGE VALIDATION ===
     print("   📊 Validating numeric ranges...")
 
-    # Tenure: 0-120 months
+    # Tenure: 0-61 months
     total_checks += 1
-    if "tenure" in df.columns:
-        if (df["tenure"] >= 0).all() and (df["tenure"] <= 120).all():
+    if "Tenure" in df.columns:
+        valid_tenure = df["Tenure"].dropna().apply(lambda x: 0 <= x <= 61).all()
+        if valid_tenure or len(df["Tenure"].dropna()) == 0:
             passed_checks += 1
         else:
-            failed_checks.append("Tenure values out of valid range")
+            failed_checks.append("Tenure values out of valid range (0-61)")
 
-    # Monthly charges: 0-200
+    # HourSpendOnApp: 0-5 hours
     total_checks += 1
-    if "MonthlyCharges" in df.columns:
-        if (df["MonthlyCharges"] >= 0).all() and (df["MonthlyCharges"] <= 200).all():
+    if "HourSpendOnApp" in df.columns:
+        valid_hours = df["HourSpendOnApp"].dropna().apply(lambda x: 0 <= x <= 5).all()
+        if valid_hours or len(df["HourSpendOnApp"].dropna()) == 0:
             passed_checks += 1
         else:
-            failed_checks.append("MonthlyCharges values out of valid range")
+            failed_checks.append("HourSpendOnApp values out of valid range (0-5)")
 
-    # Total charges: >= 0 (skip NaN values - they're acceptable for new customers)
+    # WarehouseToHome: 5-127 km
     total_checks += 1
-    if "TotalCharges" in df.columns:
-        valid_charges = (df["TotalCharges"] >= 0).all() or df["TotalCharges"].isna().any()
-        # Check that non-NaN values are >= 0
-        non_nan_valid = df["TotalCharges"].dropna().apply(lambda x: x >= 0).all() if df["TotalCharges"].notna().any() else True
-        if non_nan_valid:
+    if "WarehouseToHome" in df.columns:
+        valid_distance = df["WarehouseToHome"].dropna().apply(lambda x: 5 <= x <= 127).all()
+        if valid_distance or len(df["WarehouseToHome"].dropna()) == 0:
             passed_checks += 1
         else:
-            failed_checks.append("TotalCharges has negative values")
+            failed_checks.append("WarehouseToHome values out of valid range (5-127)")
+
+    # OrderCount: >= 0
+    total_checks += 1
+    if "OrderCount" in df.columns:
+        valid_orders = df["OrderCount"].dropna().apply(lambda x: x >= 0).all()
+        if valid_orders or len(df["OrderCount"].dropna()) == 0:
+            passed_checks += 1
+        else:
+            failed_checks.append("OrderCount has negative values")
 
     # === CONSISTENCY CHECKS ===
     print("   🔗 Validating data consistency...")
 
     total_checks += 1
-    if "TotalCharges" in df.columns and "MonthlyCharges" in df.columns:
-        # Only check consistency for rows where TotalCharges is not NaN
-        valid_rows = df[df["TotalCharges"].notna()]
-        if len(valid_rows) > 0:
-            consistency_check = (valid_rows["TotalCharges"] >= valid_rows["MonthlyCharges"]).sum() / len(valid_rows)
-            if consistency_check >= 0.95:
-                passed_checks += 1
-            else:
-                failed_checks.append("TotalCharges consistency issue (>5% of rows violate logic)")
+    # NumberOfAddress should be >= 1
+    if "NumberOfAddress" in df.columns:
+        if (df["NumberOfAddress"] >= 1).all():
+            passed_checks += 1
         else:
-            passed_checks += 1  # No valid rows to check
+            failed_checks.append("NumberOfAddress should be >= 1")
 
     # === RESULTS ===
     is_valid = len(failed_checks) == 0

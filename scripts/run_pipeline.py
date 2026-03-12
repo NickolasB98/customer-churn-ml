@@ -10,7 +10,7 @@ import argparse
 import pandas as pd
 import mlflow
 import mlflow.sklearn
-from posthog import project_root
+# from posthog import project_root
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
     classification_report, precision_score, recall_score,
@@ -220,12 +220,12 @@ def main(args):
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description="Run churn pipeline with XGBoost + MLflow")
-    p.add_argument("--input", type=str, required=True,
-                   help="path to CSV (e.g., data/raw/Telco-Customer-Churn.csv)")
+    p.add_argument("--input", type=str, default="data/raw/E-Commerce-Customer-Churn.csv",
+                   help="path to CSV (default: E-Commerce dataset)")
     p.add_argument("--target", type=str, default="Churn")
     p.add_argument("--threshold", type=float, default=0.35)
     p.add_argument("--test_size", type=float, default=0.2)
-    p.add_argument("--experiment", type=str, default="Telco Churn")
+    p.add_argument("--experiment", type=str, default="E-Commerce Churn")
     p.add_argument("--mlflow_uri", type=str, default=None,
                     help="override MLflow tracking URI, else uses project_root/mlruns")
 

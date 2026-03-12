@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/nikolas/Desktop/telco-customer-churn-ml/Telco-Customer-Churn-ML/mlruns/776425735629830369/12e102f4c1fb4506822d2825fcd8cb2f/artifacts
+end_time: 1773316053960
+entry_point_name: ''
+experiment_id: '776425735629830369'
+lifecycle_stage: active
+run_id: 12e102f4c1fb4506822d2825fcd8cb2f
+run_name: fortunate-duck-546
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773316053923
+status: 4
+tags: []
+user_id: nikolas
