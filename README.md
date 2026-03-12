@@ -302,6 +302,8 @@ Interactive prediction form with:
 - **Real-time predictions** with business-friendly output
 
 **URL**: `http://localhost:8000/ui`
+<img width="1426" height="785" alt="image" src="https://github.com/user-attachments/assets/b273fd24-cc03-4b60-a117-9b34c7ea67dd" />
+
 
 ---
 
