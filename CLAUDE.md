@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Training Pipeline
 ```bash
 # Run the complete ML training pipeline
-python scripts/run_pipeline.py --input data/raw/Telco-Customer-Churn.csv --target Churn
+python scripts/run_pipeline.py --input data/raw/E-Commerce-Customer-Churn.csv --target Churn
 
 # Prepare processed data only
 python scripts/prepare_processed_data.py
@@ -37,8 +37,8 @@ python -m uvicorn src.app.app:app --host 0.0.0.0 --port 8000
 ### Docker
 ```bash
 # Build and run the containerized application
-docker build -t telco-churn-app .
-docker run -p 8000:8000 telco-churn-app
+docker build -t ecommerce-churn-app .
+docker run -p 8000:8000 ecommerce-churn-app
 ```
 
 ## Architecture Overview
@@ -55,7 +55,7 @@ This project implements a complete MLOps pipeline with two distinct phases:
 2. Feature processing mirrors training-time transformations for consistency
 
 ### MLflow Integration Patterns
-- **Experiment Name**: "Telco Churn" (default, can be overridden)
+- **Experiment Name**: "E-Commerce Churn" (default, can be overridden)
 - **Tracking URI**: File-based at `{project_root}/mlruns`
 - **Logged Artifacts**: `model/`, `feature_columns.txt`, `preprocessing.pkl`
 - **Tracked Metrics**: precision, recall, f1, roc_auc, train_time, pred_time, data_quality_pass
@@ -93,7 +93,7 @@ Critical pattern: Training and serving must use identical feature transformation
 
 ### CI/CD Pipeline
 - **Trigger**: Push to main branch
-- **Actions**: Build Docker image → Push to Docker Hub (`anasriad8/telco-fastapi:latest`)
+- **Actions**: Build Docker image → Push to Docker Hub (`anasriad8/ecommerce-churn-api:latest`)
 - **Requirements**: `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets
 - **Deployment**: Manual ECS service update (AWS Fargate + ALB)
 

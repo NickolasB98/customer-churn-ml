@@ -383,6 +383,11 @@ E-Commerce-Customer-Churn-ML/
 │
 ├── .venv/                                   # Python virtual environment
 ├── requirements.txt                         # Python dependencies
+│
+├── start_ui.py                              # Quick start script (cross-platform)
+├── start_ui.sh                              # Quick start script (macOS/Linux)
+├── start_ui.bat                             # Quick start script (Windows)
+│
 ├── README.md                                # This file
 └── CLAUDE.md                                # Development guide
 ```
@@ -504,13 +509,29 @@ python scripts/run_pipeline.py --input path/to/data.csv --experiment "My Experim
 
 ### Serving & Predictions
 
-5. **Start the web application**
+5. **Start the web application (choose one option)**
+
+#### Option A: Quick Start (Recommended) 🚀
+```bash
+python start_ui.py
+```
+This automatically:
+- Creates virtual environment if needed
+- Installs dependencies
+- Activates venv
+- Launches the application
+
+Also available:
+- **macOS/Linux**: `./start_ui.sh`
+- **Windows**: `start_ui.bat`
+
+#### Option B: Manual Start
 ```bash
 python -m uvicorn src.app.main:app --host 0.0.0.0 --port 8000
 ```
 
 6. **Access interactive interface**
-- **Web UI**: http://localhost:8000/ui
+- **Web UI**: http://localhost:8000/ui ← **Make predictions here**
 - **REST API Docs**: http://localhost:8000/docs
 - **API Server**: http://localhost:8000
 
