@@ -710,11 +710,26 @@ Based on model analysis, these features have the strongest influence on churn pr
 
 ---
 
-## Author
+## Author & Attribution
 
 **Nikolas** - Data Scientist & ML Engineer
 
-*This project was built from scratch as a personal learning initiative to create a production-grade ML system. It demonstrates practical skills in end-to-end machine learning, from data exploration to serving interactive predictions.*
+### Project Credits
+
+This project was **adapted** to use a real-world E-Commerce Customer Churn dataset, building upon the foundational MLOps architecture and pipeline design created by **Anas Riad**. The core concepts of:
+- End-to-end ML pipeline orchestration
+- MLflow experiment tracking integration
+- FastAPI + Gradio serving architecture
+- Feature engineering patterns
+- Model evaluation and validation
+
+...were inspired by Anas Riad's original work and adapted here with:
+- A different but similar e-commerce dataset (replacing Telco Churn)
+- Customized feature engineering for e-commerce domain
+- Updated validation rules and business logic constraints
+- E-commerce specific API schema and web interface
+
+The objective was to create a **unique portfolio project** by applying proven ML engineering patterns to a new domain, demonstrating the ability to adapt and transfer MLOps best practices across different datasets and problem spaces.
 
 ---
 
