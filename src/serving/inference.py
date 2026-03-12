@@ -40,29 +40,21 @@ try:
     model = mlflow.pyfunc.load_model(MODEL_DIR)
     print(f"✅ Model loaded successfully from {MODEL_DIR}")
 except Exception as e:
-    print(f"❌ Failed to load from {MODEL_DIR}, trying local paths...")
-    # Fallback for local development
+    print(f"❌ Failed to load model from {MODEL_DIR}: {e}")
+    # Fallback for local development (OPTIONAL)
     try:
+        # Try loading from local MLflow tracking
         import glob
-
-        # Try local artifacts directory first
-        local_artifacts = "./artifacts/production_model"
-        if os.path.exists(local_artifacts):
-            model = mlflow.pyfunc.load_model(local_artifacts)
-            MODEL_DIR = local_artifacts
-            print(f"✅ Loaded model from {local_artifacts}")
+        local_model_paths = glob.glob("./mlruns/*/*/artifacts/model")
+        if local_model_paths:
+            latest_model = max(local_model_paths, key=os.path.getmtime)
+            model = mlflow.pyfunc.load_model(latest_model)
+            MODEL_DIR = latest_model
+            print(f"✅ Fallback: Loaded model from {latest_model}")
         else:
-            # Try MLflow tracking directory
-            local_model_paths = glob.glob("./mlruns/*/*/artifacts/model")
-            if local_model_paths:
-                latest_model = max(local_model_paths, key=os.path.getmtime)
-                model = mlflow.pyfunc.load_model(latest_model)
-                MODEL_DIR = latest_model
-                print(f"✅ Loaded model from {latest_model}")
-            else:
-                raise Exception("No model found")
+            raise Exception("No model found in local mlruns")
     except Exception as fallback_error:
-        raise Exception(f"Failed to load model from {MODEL_DIR}: {e}. Fallback failed: {fallback_error}")
+        raise Exception(f"Failed to load model: {e}. Fallback failed: {fallback_error}")
 
 # === FEATURE SCHEMA LOADING ===
 # CRITICAL: Load the exact feature column order used during training
